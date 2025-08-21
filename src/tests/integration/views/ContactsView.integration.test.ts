@@ -1,10 +1,11 @@
 import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest'
 import { mount } from '@vue/test-utils'
 import ContactsView from '@/views/ContactsView.vue'
+import { contactService } from '@/services/contactService'
 
 // Mock do apiService
-vi.mock('@/services/api', () => ({
-  apiService: {
+vi.mock('@/services/contactService', () => ({
+  contactService: {
     getContacts: vi.fn(),
     createContact: vi.fn(),
     updateContact: vi.fn(),
@@ -78,9 +79,7 @@ describe('ContactsView integration', () => {
   let mockApiService: any
 
   beforeEach(async () => {
-    const { apiService } = await import('@/services/api')
-    mockApiService = apiService
-
+    mockApiService = contactService
     vi.clearAllMocks()
     vi.useFakeTimers()
   })
