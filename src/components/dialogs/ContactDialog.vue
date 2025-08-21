@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { toRefs } from 'vue'
-import type { Contact } from '@/services/api'
+import type { Contact } from '@/services/contactService'
 
 const props = defineProps<{
   contact: Contact | null
@@ -41,9 +41,9 @@ const callContact = () => {
 
 <template>
   <div v-if="isOpen" class="dialog-overlay" @click="closeDialog">
-    <div class="dialog" @click.stop>
-      <div class="dialog__header">
-        <div class="dialog__contact-info">
+    <article class="dialog" @click.stop>
+      <header class="dialog__header">
+        <section class="dialog__contact-info">
           <div class="dialog__contact-avatar">
             <template v-if="contact?.photo">
               <img :src="contact?.photo" :alt="contact?.name" class="dialog__contact-photo" />
@@ -53,8 +53,8 @@ const callContact = () => {
             </template>
           </div>
           <h3 class="dialog__contact-name">{{ contact?.name }}</h3>
-        </div>
-        <div class="dialog__actions">
+        </section>
+        <nav class="dialog__actions">
           <button
             class="dialog__action-btn"
             type="button"
@@ -82,42 +82,42 @@ const callContact = () => {
           <button class="dialog__action-btn" type="button" aria-label="Fechar" @click="closeDialog">
             <img src="../../assets/icons/close.svg" alt="Fechar" />
           </button>
-        </div>
-      </div>
+        </nav>
+      </header>
 
       <div class="dialog__divider"></div>
 
-      <div class="dialog__content">
-        <div class="dialog__field">
+      <main class="dialog__content">
+        <section class="dialog__field">
           <label class="dialog__label">Email</label>
           <p class="dialog__value">{{ contact?.email ?? 'Não informado' }}</p>
-        </div>
-        <div class="dialog__field">
+        </section>
+        <section class="dialog__field">
           <label class="dialog__label">Endereço</label>
           <p class="dialog__value">{{ contact?.address ?? 'Não informado' }}</p>
-        </div>
-        <div class="dialog__field">
+        </section>
+        <section class="dialog__field">
           <label class="dialog__label">Telefone</label>
           <p class="dialog__value">{{ contact?.phone ?? 'Não informado' }}</p>
-        </div>
-        <div class="dialog__field">
+        </section>
+        <section class="dialog__field">
           <label class="dialog__label">Celular</label>
           <p class="dialog__value">{{ contact?.mobile ?? 'Não informado' }}</p>
-        </div>
-        <div class="dialog__field">
+        </section>
+        <section class="dialog__field">
           <label class="dialog__label">Bairro</label>
           <p class="dialog__value">{{ contact?.district ?? 'Não informado' }}</p>
-        </div>
-        <div class="dialog__field">
+        </section>
+        <section class="dialog__field">
           <label class="dialog__label">Cidade</label>
           <p class="dialog__value">{{ contact?.city ?? 'Não informado' }}</p>
-        </div>
-        <div class="dialog__field">
+        </section>
+        <section class="dialog__field">
           <label class="dialog__label">Estado</label>
           <p class="dialog__value">{{ contact?.state ?? 'Não informado' }}</p>
-        </div>
-      </div>
-    </div>
+        </section>
+      </main>
+    </article>
   </div>
 </template>
 
@@ -299,6 +299,59 @@ const callContact = () => {
   to {
     opacity: 1;
     transform: scale(1) translateY(0);
+  }
+}
+
+@media (max-width: 768px) {
+  .dialog {
+    width: 90%;
+    max-height: 90vh;
+  }
+
+  .dialog__header {
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-md);
+  }
+
+  .dialog__contact-info {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .dialog__contact-name {
+    font-size: var(--font-size-lg);
+  }
+
+  .dialog__actions {
+    width: 100%;
+    justify-content: center;
+    margin-top: var(--spacing-md);
+  }
+
+  .dialog__field {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-xs);
+  }
+
+  .dialog__label {
+    text-align: left;
+    min-width: auto;
+    width: 100%;
+  }
+
+  .dialog__value {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .dialog {
+    width: 100%;
+    border-radius: 0;
+    max-height: 100vh;
   }
 }
 </style>

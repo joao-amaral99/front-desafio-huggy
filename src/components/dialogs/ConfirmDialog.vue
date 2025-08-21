@@ -35,9 +35,11 @@ const handleConfirm = () => {
 
 <template>
   <div v-if="isOpen" class="confirm-overlay" @click="handleCancel">
-    <div class="confirm-dialog" @click.stop>
-      <h2 class="confirm-dialog__title">{{ title }}</h2>
-      <div class="confirm-dialog__actions">
+    <article class="confirm-dialog" @click.stop>
+      <header>
+        <h2 class="confirm-dialog__title">{{ title }}</h2>
+      </header>
+      <footer class="confirm-dialog__actions">
         <button
           class="confirm-dialog__btn confirm-dialog__btn--cancel"
           type="button"
@@ -60,8 +62,8 @@ const handleConfirm = () => {
           <span v-if="!props.isLoading">{{ props.confirmText }}</span>
           <Loader v-else />
         </button>
-      </div>
-    </div>
+      </footer>
+    </article>
   </div>
 </template>
 

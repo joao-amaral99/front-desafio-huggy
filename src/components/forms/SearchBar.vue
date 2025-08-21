@@ -25,16 +25,16 @@ const value = computed({
 
 <template>
   <label class="search-bar__label">
-    <div class="search-bar">
+    <section class="search-bar">
       <img src="@/assets/icons/search.svg" alt="Buscar" class="search-bar__icon" />
       <input
         v-model="value"
         class="search-bar__input"
-        type="text"
+        type="search"
         :placeholder="props.placeholder"
         :aria-label="props.placeholder"
       />
-    </div>
+    </section>
   </label>
 </template>
 

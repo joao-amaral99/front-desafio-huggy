@@ -67,7 +67,9 @@ onMounted(() => {
 
 <template>
   <main class="login">
-    <h2 class="login__title">Login</h2>
+    <header>
+      <h2 class="login__title">Login</h2>
+    </header>
     <form class="login__form" @submit.prevent="handleLogin">
       <button
         class="login__button"
@@ -147,7 +149,7 @@ onMounted(() => {
 
 @media (max-width: 480px) {
   .login__button {
-    width: 100%;
+    width: 80%;
     min-width: 0;
   }
 }

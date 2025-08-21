@@ -7,7 +7,7 @@ import ContactFormDialog from '@/components/dialogs/ContactFormDialog.vue'
 import Loader from '@/components/ui/Loader.vue'
 import { ref, computed, onMounted, watch } from 'vue'
 import { useToast } from 'vue-toast-notification'
-import { apiService, type Contact } from '@/services/api'
+import { type Contact, contactService } from '@/services/contactService'
 import { Pie } from 'vue-chartjs'
 import { Chart as ChartJS, ArcElement, Tooltip, Legend, type ChartData } from 'chart.js'
 import { chartOptions, createChartData } from '@/utils/chartConfig'
@@ -115,16 +115,15 @@ const saveContact = async (contactData: Contact) => {
     isLoading.value = true
 
     if (isEditingContact.value && contactToEdit.value) {
-      await apiService.updateContact(contactToEdit.value.id!, contactData)
+      await contactService.updateContact(contactToEdit.value.id!, contactData)
 
       $toast.success('Contato atualizado com sucesso!', { position: 'top-right' })
     } else {
-      await apiService.createContact(contactData)
+      await contactService.createContact(contactData)
 
       $toast.success('Contato criado com sucesso!', { position: 'top-right' })
     }
 
-    // Só fecha o formulário em caso de sucesso
     closeContactForm()
     await loadContacts()
   } catch (error) {
@@ -133,7 +132,7 @@ const saveContact = async (contactData: Contact) => {
     const errorMessage = getErrorMessage(error)
     $toast.error(errorMessage, {
       position: 'top-right',
-      duration: 5000, // Mais tempo para ler mensagens mais específicas
+      duration: 5000,
     })
   } finally {
     isLoading.value = false
@@ -155,7 +154,8 @@ const callContact = async (contact: Contact) => {
     const { id } = contact
 
     if (id) {
-      await apiService.makeCall(id)
+      await contactService.makeCall(id)
+      $toast.success('Suceso! Aguarde a ligação.', { position: 'top-right' })
     }
   } catch (error) {
     console.error('Erro ao criar contato:', error)
@@ -171,7 +171,7 @@ const confirmDelete = async () => {
   try {
     isLoading.value = true
 
-    await apiService.deleteContact(contactToDelete.value.id)
+    await contactService.deleteContact(contactToDelete.value.id)
 
     $toast.success('Contato excluído com sucesso!', { position: 'top-right' })
 
@@ -203,7 +203,7 @@ const loadContacts = async () => {
 
     params.sort_order = sortOrder.value
 
-    const contactsData = await apiService.getContacts(params)
+    const contactsData = await contactService.getContacts(params)
 
     if (contactsData && Array.isArray(contactsData)) {
       contacts.value = contactsData.map((contact) => ({
@@ -227,13 +227,11 @@ const loadContacts = async () => {
   }
 }
 
-// Função para alternar ordenação
 const toggleSortOrder = () => {
   sortOrder.value = sortOrder.value === 'asc' ? 'desc' : 'asc'
   loadContacts()
 }
 
-// Debounce para busca
 let searchTimeout: NodeJS.Timeout | null = null
 
 const debouncedSearch = () => {
@@ -243,10 +241,9 @@ const debouncedSearch = () => {
 
   searchTimeout = setTimeout(() => {
     loadContacts()
-  }, 500) // 500ms de delay
+  }, 500)
 }
 
-// Watcher para busca
 watch(searchQuery, () => {
   debouncedSearch()
 })
@@ -254,7 +251,6 @@ watch(searchQuery, () => {
 const toggleReports = async () => {
   showReports.value = !showReports.value
 
-  // Carregar dados dos gráficos quando abrir a view de relatórios
   if (showReports.value) {
     await loadChartData()
   }
@@ -273,8 +269,8 @@ const loadChartData = async () => {
     isLoadingCharts.value = true
 
     const [stateData, cityData] = await Promise.all([
-      apiService.getContactsByState(),
-      apiService.getContactsByCity(),
+      contactService.getContactsByState(),
+      contactService.getContactsByCity(),
     ])
 
     const stateGroups = stateData.reduce(
@@ -315,12 +311,15 @@ onMounted(() => {
 
 <template>
   <main class="contacts">
-    <div class="contacts__center">
-      <h2 class="contacts__title">Contatos</h2>
-      <div class="contacts__table-container">
-        <div v-if="!showReports" class="contacts__actions">
+    <section class="contacts__center">
+      <header>
+        <h2 class="contacts__title">Contatos</h2>
+      </header>
+
+      <section class="contacts__table-container">
+        <header v-if="!showReports" class="contacts__actions">
           <SearchBar v-model="searchQuery" />
-          <div class="contacts__buttons">
+          <nav class="contacts__buttons">
             <BaseButton @click="openCreateForm" />
             <button
               class="icon-button"
@@ -330,10 +329,10 @@ onMounted(() => {
             >
               <img src="@/assets/icons/report.svg" alt="Relatório" />
             </button>
-          </div>
-        </div>
-        <!-- Tabela de contatos -->
-        <div v-if="!showReports" class="contacts__table">
+          </nav>
+        </header>
+
+        <section v-if="!showReports" class="contacts__table">
           <table class="table">
             <thead class="table__header">
               <tr class="table__header-row">
@@ -352,7 +351,7 @@ onMounted(() => {
                 </th>
                 <th class="table__header-cell">Email</th>
                 <th class="table__header-cell">Telefone</th>
-                <th class="table__header-cell"></th>
+                <th class="table__header-cell" aria-label="Ações"></th>
               </tr>
             </thead>
             <tbody class="table__body">
@@ -361,7 +360,7 @@ onMounted(() => {
                   class="table__cell table__cell--name table__cell--clickable"
                   @click="openContactDialog(contact)"
                 >
-                  <div class="table__contact">
+                  <article class="table__contact">
                     <div class="table__contact-avatar">
                       <template v-if="contact.photo">
                         <img
@@ -375,7 +374,7 @@ onMounted(() => {
                       </template>
                     </div>
                     <span class="table__contact-name">{{ contact.name }}</span>
-                  </div>
+                  </article>
                 </td>
                 <td class="table__cell table__cell--clickable" @click="openContactDialog(contact)">
                   {{ contact.email }}
@@ -384,7 +383,7 @@ onMounted(() => {
                   {{ contact.phone }}
                 </td>
                 <td class="table__cell table__cell--actions">
-                  <div class="table__actions">
+                  <nav class="table__actions">
                     <button
                       class="table__action-btn"
                       type="button"
@@ -401,13 +400,13 @@ onMounted(() => {
                     >
                       <img src="@/assets/icons/delete.svg" alt="Excluir" />
                     </button>
-                  </div>
+                  </nav>
                 </td>
               </tr>
             </tbody>
           </table>
 
-          <div class="contacts__empty-state" v-if="isEmpty">
+          <section class="contacts__empty-state" v-if="isEmpty">
             <img
               src="../assets/images/book.png"
               alt="Nenhum contato encontrado"
@@ -415,33 +414,32 @@ onMounted(() => {
             />
             <p class="contacts__empty-text">Ainda não há contatos</p>
             <BaseButton title="Adicionar contato" @click="openCreateForm" />
-          </div>
-        </div>
+          </section>
+        </section>
 
-        <!-- Relatórios com gráficos -->
-        <div v-if="showReports" class="reports">
-          <div class="reports__header">
+        <section v-if="showReports" class="reports">
+          <header class="reports__header">
             <button class="reports__back-button" @click="goBackToContacts" aria-label="Voltar">
               ← Voltar
             </button>
-          </div>
+          </header>
 
-          <div class="reports__content">
+          <main class="reports__content">
             <h3 class="reports__title">Dados sobre contatos</h3>
 
-            <div class="reports__charts">
-              <div class="chart-section">
+            <section class="reports__charts">
+              <article class="chart-section">
                 <h4 class="chart-section__title">Segmentação por estado</h4>
-                <div class="chart-container">
+                <div class="chart-container first-chart">
                   <div v-if="isLoadingCharts" class="chart-loading">
                     <Loader />
                     <span class="chart-loading__text">Carregando dados...</span>
                   </div>
                   <Pie v-else :data="stateChartData" :options="chartOptions" />
                 </div>
-              </div>
+              </article>
 
-              <div class="chart-section">
+              <article class="chart-section">
                 <h4 class="chart-section__title">Segmentação por cidade</h4>
                 <div class="chart-container">
                   <div v-if="isLoadingCharts" class="chart-loading">
@@ -450,14 +448,13 @@ onMounted(() => {
                   </div>
                   <Pie v-else :data="cityChartData" :options="chartOptions" />
                 </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+              </article>
+            </section>
+          </main>
+        </section>
+      </section>
+    </section>
 
-    <!-- Dialog de detalhes do usuário -->
     <ContactDialog
       :contact="selectedContact"
       :is-open="isDialogOpen"
@@ -467,7 +464,6 @@ onMounted(() => {
       @call="callContact"
     />
 
-    <!-- Dialog de confirmação de exclusão -->
     <ConfirmDialog
       title="Excluir este contato?"
       :is-open="showConfirmDelete"
@@ -477,7 +473,6 @@ onMounted(() => {
       @confirm="confirmDelete"
     />
 
-    <!-- Dialog de formulário de contato -->
     <ContactFormDialog
       :is-open="showContactForm"
       :is-editing="isEditingContact"
@@ -490,23 +485,26 @@ onMounted(() => {
 </template>
 
 <style scoped>
+/* Estilos globais para a página */
 .contacts {
   width: 100%;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: center; /* Centraliza verticalmente o contêiner principal */
   align-items: center;
   background: var(--color-gray-100);
+  padding: var(--spacing-md);
+  box-sizing: border-box;
 }
 
 .contacts__center {
-  width: 930px;
+  width: 100%; /* Largura total */
+  max-width: 930px; /* Limite em telas grandes */
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   margin: 0 auto;
-  overflow: hidden;
 }
 
 .contacts__title {
@@ -514,6 +512,7 @@ onMounted(() => {
   font-size: var(--font-size-xl);
   font-weight: var(--font-weight-medium);
   margin-bottom: var(--spacing-lg);
+  align-self: flex-start; /* Garante que o título não seja afetado pelo justify-content */
 }
 
 .contacts__actions {
@@ -523,6 +522,7 @@ onMounted(() => {
   align-items: center;
   margin-bottom: var(--spacing-lg);
   padding: var(--spacing-lg);
+  box-sizing: border-box;
 }
 
 .contacts__buttons {
@@ -558,13 +558,15 @@ onMounted(() => {
 
 .contacts__table-container {
   width: 100%;
-  height: 928px;
+  height: 928px; /* Altura fixa original, para manter o layout */
   border-radius: var(--border-radius-lg);
   border: 1px solid var(--color-border-primary);
   background: var(--color-white);
   box-sizing: border-box;
   padding: 0;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 .contacts__table {
@@ -579,8 +581,12 @@ onMounted(() => {
   width: 100%;
   border-collapse: separate;
   font-family: var(--font-family-primary);
+  min-width: 600px; /* Garante a rolagem horizontal em telas pequenas */
 }
 
+/* ... (O restante dos estilos da tabela, sem modificações) ... */
+
+/* Estilos de tabela (mantidos) */
 .table__header {
   position: sticky;
   top: 0;
@@ -611,6 +617,7 @@ onMounted(() => {
   user-select: none;
 }
 
+/* ... (demais estilos de tabela) ... */
 .table__sort-icon {
   width: 16px;
   height: 16px;
@@ -879,7 +886,6 @@ onMounted(() => {
   display: flex;
   flex-direction: column;
   gap: var(--spacing-lg);
-  max-height: calc(100vh - 200px);
   overflow-y: auto;
 }
 
@@ -907,9 +913,8 @@ onMounted(() => {
   margin-top: var(--spacing-xl);
 }
 
-.chart-container canvas {
-  max-height: 200px !important;
-  max-width: 450px !important;
+.first-chart {
+  margin-left: -30px;
 }
 
 .chart-loading {
@@ -927,28 +932,97 @@ onMounted(() => {
   font-weight: var(--font-weight-medium);
 }
 
-/* Responsividade para dispositivos menores */
 @media (max-width: 768px) {
-  .contacts__table {
-    overflow-x: auto;
+  .contacts {
+    padding: var(--spacing-sm);
+    justify-content: flex-start;
   }
 
-  .table {
-    min-width: 600px;
+  .contacts__center {
+    padding: 0;
+  }
+
+  .contacts__title {
+    font-size: var(--font-size-lg);
+    margin-bottom: var(--spacing-md);
+    padding: 0 var(--spacing-md);
+  }
+
+  .contacts__actions {
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto;
+    gap: var(--spacing-md);
+    padding: var(--spacing-md);
+  }
+
+  .contacts__buttons {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .table__actions {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .table__contact-avatar {
+    display: none;
+  }
+
+  .icon-button {
+    background: var(--color-gray-200);
+    border-radius: var(--border-radius-md);
+    width: 44px;
+  }
+
+  .contacts__table-container {
+    height: auto;
+    border-radius: var(--border-radius-md);
+  }
+
+  .reports {
+    padding: var(--spacing-md);
   }
 
   .reports__charts {
-    gap: var(--spacing-lg);
+    flex-direction: column;
+    gap: var(--spacing-xl);
   }
 
   .chart-container {
-    height: 180px;
-    max-width: 350px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    max-width: 60%;
+    height: 250px;
+    margin: 0 auto;
   }
 
-  .chart-container canvas {
-    max-height: 180px !important;
-    max-width: 350px !important;
+  .chart-section {
+    padding: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .contacts__buttons {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--spacing-sm);
+  }
+
+  .contacts__buttons .base-button {
+    width: 100%;
+  }
+
+  .icon-button {
+    width: 100%;
+  }
+
+  .contacts__title {
+    font-size: var(--font-size-base);
   }
 }
 </style>

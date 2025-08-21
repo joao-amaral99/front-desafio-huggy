@@ -108,6 +108,7 @@ const validateForm = () => {
 const handleSubmit = () => {
   if (validateForm()) {
     emit('save', { ...formData.value })
+    resetForm()
   }
 }
 
@@ -118,17 +119,17 @@ const clearError = (field: keyof typeof errors.value) => {
 
 <template>
   <div v-if="isOpen" class="form-overlay" @click="closeDialog">
-    <div class="form-dialog" @click.stop>
-      <div class="form-dialog__header">
+    <article class="form-dialog" @click.stop>
+      <header class="form-dialog__header">
         <h2 class="form-dialog__title">
           {{ isEditing ? 'Editar contato' : 'Adicionar novo contato' }}
         </h2>
-      </div>
+      </header>
 
       <div class="form-dialog__divider"></div>
 
-      <form class="form-dialog__form" @submit.prevent="handleSubmit">
-        <div class="form-dialog__field">
+      <main class="form-dialog__form" @submit.prevent="handleSubmit">
+        <section class="form-dialog__field">
           <label class="form-dialog__label" for="name">Nome</label>
           <input
             id="name"
@@ -144,9 +145,9 @@ const clearError = (field: keyof typeof errors.value) => {
             @input="clearError('name')"
           />
           <span v-if="errors.name" class="form-dialog__error">Campo obrigatório</span>
-        </div>
+        </section>
 
-        <div class="form-dialog__field">
+        <section class="form-dialog__field">
           <label class="form-dialog__label" for="email">Email</label>
           <input
             id="email"
@@ -162,9 +163,9 @@ const clearError = (field: keyof typeof errors.value) => {
             @input="clearError('email')"
           />
           <span v-if="errors.email" class="form-dialog__error">Campo obrigatório</span>
-        </div>
+        </section>
 
-        <div class="form-dialog__field">
+        <section class="form-dialog__field">
           <label class="form-dialog__label" for="phone">Telefone</label>
           <input
             id="phone"
@@ -181,9 +182,9 @@ const clearError = (field: keyof typeof errors.value) => {
             @input="clearError('phone')"
           />
           <span v-if="errors.phone" class="form-dialog__error">Campo obrigatório</span>
-        </div>
+        </section>
 
-        <div class="form-dialog__field">
+        <section class="form-dialog__field">
           <label class="form-dialog__label" for="mobile">Celular</label>
           <input
             id="mobile"
@@ -200,9 +201,9 @@ const clearError = (field: keyof typeof errors.value) => {
             @input="clearError('mobile')"
           />
           <span v-if="errors.mobile" class="form-dialog__error">Campo obrigatório</span>
-        </div>
+        </section>
 
-        <div class="form-dialog__field">
+        <section class="form-dialog__field">
           <label class="form-dialog__label" for="address">Endereço</label>
           <input
             id="address"
@@ -211,10 +212,10 @@ const clearError = (field: keyof typeof errors.value) => {
             type="text"
             placeholder="Endereço"
           />
-        </div>
+        </section>
 
-        <div class="form-dialog__field-row">
-          <div class="form-dialog__field form-dialog__field--third">
+        <section class="form-dialog__field-row">
+          <section class="form-dialog__field form-dialog__field--third">
             <label class="form-dialog__label" for="district">Bairro</label>
             <input
               id="district"
@@ -223,8 +224,8 @@ const clearError = (field: keyof typeof errors.value) => {
               type="text"
               placeholder="Bairro"
             />
-          </div>
-          <div class="form-dialog__field form-dialog__field--third">
+          </section>
+          <section class="form-dialog__field form-dialog__field--third">
             <label class="form-dialog__label" for="city">Cidade</label>
             <input
               id="city"
@@ -233,8 +234,8 @@ const clearError = (field: keyof typeof errors.value) => {
               type="text"
               placeholder="Cidade"
             />
-          </div>
-          <div class="form-dialog__field form-dialog__field--third">
+          </section>
+          <section class="form-dialog__field form-dialog__field--third">
             <label class="form-dialog__label" for="state">Estado</label>
             <input
               id="state"
@@ -243,13 +244,13 @@ const clearError = (field: keyof typeof errors.value) => {
               type="text"
               placeholder="Estado"
             />
-          </div>
-        </div>
-      </form>
+          </section>
+        </section>
+      </main>
 
       <div class="form-dialog__divider"></div>
 
-      <div class="form-dialog__actions">
+      <footer class="form-dialog__actions">
         <button
           class="form-dialog__btn form-dialog__btn--cancel"
           type="button"
@@ -267,8 +268,8 @@ const clearError = (field: keyof typeof errors.value) => {
           <span v-if="!props.isLoading"> Salvar </span>
           <Loader v-else />
         </button>
-      </div>
-    </div>
+      </footer>
+    </article>
   </div>
 </template>
 
@@ -466,7 +467,6 @@ const clearError = (field: keyof typeof errors.value) => {
   cursor: not-allowed;
 }
 
-/* Animações */
 .form-overlay {
   animation: fadeIn 0.2s ease-out;
 }
@@ -492,6 +492,44 @@ const clearError = (field: keyof typeof errors.value) => {
   to {
     opacity: 1;
     transform: scale(1) translateY(0);
+  }
+}
+
+@media (max-width: 768px) {
+  .form-dialog {
+    width: 95%;
+    min-height: auto;
+    max-height: 95vh;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    position: absolute;
+  }
+
+  .form-dialog__field-row {
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .form-dialog__input--large,
+  .form-dialog__input--medium,
+  .form-dialog__input--small,
+  .form-dialog__input--xlarge,
+  .form-dialog__input--flexible {
+    width: 100%;
+  }
+
+  .form-dialog__field-row .form-dialog__field {
+    width: 100%;
+    margin-bottom: var(--spacing-md);
+  }
+}
+
+@media (max-width: 480px) {
+  .form-dialog {
+    width: 100%;
+    border-radius: 0;
+    max-height: 100vh;
   }
 }
 </style>
