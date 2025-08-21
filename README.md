@@ -1,4 +1,4 @@
-# 📞 Sistema de Gerenciamento de Contatos - Huggy
+## Front-end desafio Huggy
 
 ## 🚀 Funcionalidades
 
