@@ -1,39 +1,65 @@
-# front-desafio-huggy
+# 📞 Sistema de Gerenciamento de Contatos - Huggy
 
-This template should help get you started developing with Vue 3 in Vite.
+## 🚀 Funcionalidades
 
-## Recommended IDE Setup
+### ✨ Principais Recursos
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+- **📋 Listagem de Contatos** - Visualização em tabela com ordenação e busca
+- **➕ Adicionar Contatos** - Formulário completo com validação
+- **✏️ Editar Contatos** - Modificação de dados existentes
+- **🗑️ Excluir Contatos** - Confirmação antes da exclusão
+- **📊 Relatórios** - Gráficos de segmentação por estado e cidade
+- **📱 Design Responsivo** - Funciona em todos os dispositivos
+- **🔍 Busca Inteligente** - Filtro em tempo real
+- **📞 Integração com Twilio** - Funcionalidade de ligação
 
-## Type Support for `.vue` Imports in TS
+## 🛠️ Tecnologias Utilizadas
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the TypeScript language service aware of `.vue` types.
+### Frontend
 
-## Customize configuration
+- **Vue.js 3** - Framework progressivo
+- **TypeScript** - Tipagem estática
+- **Chart.js** - Gráficos
+- **Maska** - Máscaras de input
 
-See [Vite Configuration Reference](https://vite.dev/config/).
+## 📦 Instalação e Configuração
 
-## Project Setup
+### Pré-requisitos
 
-```sh
+- Node.js 18+
+- npm
+
+### Passos para Instalação
+
+1. **Clone o repositório**
+
+2. **Instale as dependências**
+
+```bash
 npm install
 ```
 
-### Compile and Hot-Reload for Development
+4. **Execute o projeto**
 
-```sh
+```bash
+# Desenvolvimento
 npm run dev
 ```
 
-### Type-Check, Compile and Minify for Production
+## 🧪 Testes
 
-```sh
-npm run build
-```
+### Executar Testes
 
-### Lint with [ESLint](https://eslint.org/)
+```bash
+# Todos os testes
+npm run test
 
-```sh
-npm run lint
+# Testes em modo watch
+npm run test:watch
+
+# Testes unitários
+npm run test:unit
+
+# Testes de integração
+npm run test:integration
 ```
