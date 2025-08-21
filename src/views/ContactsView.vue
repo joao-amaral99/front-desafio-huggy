@@ -82,7 +82,6 @@ const getErrorMessage = (error: any): string => {
 }
 
 const openContactDialog = (contact: Contact) => {
-  console.log('aqui')
   selectedContact.value = contact
   isDialogOpen.value = true
 }
@@ -195,6 +194,8 @@ const loadContacts = async () => {
   isLoading.value = true
 
   try {
+    contacts.value = []
+
     const params: { search?: string; sort_order?: 'asc' | 'desc' } = {}
 
     if (searchQuery.value.trim()) {
