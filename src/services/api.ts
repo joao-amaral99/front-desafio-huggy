@@ -8,10 +8,10 @@ interface Contact {
   mobile: string
   address: string
   district: string
-  city?: string // Adicionado campo city opcional
+  city?: string
   state: string
-  photo?: string // Adicionado campo photo
-  initials?: string // Campo initials opcional
+  photo?: string
+  initials?: string
 }
 
 class ApiService {
@@ -40,16 +40,14 @@ class ApiService {
       const response = await fetch(url, config)
 
       if (!response.ok) {
-        // Tentar extrair o corpo da resposta de erro
         let errorData
+
         try {
           errorData = await response.json()
         } catch {
-          // Se não conseguir fazer parse do JSON, usar resposta padrão
           errorData = { message: `HTTP error! status: ${response.status}` }
         }
 
-        // Criar erro customizado com os dados da API
         const apiError = new Error(errorData.message || `HTTP error! status: ${response.status}`)
         ;(apiError as any).apiData = errorData
         ;(apiError as any).status = response.status
@@ -122,7 +120,6 @@ class ApiService {
     })
   }
 
-  // Endpoints para dados dos gráficos
   async getContactsByState(): Promise<{ label: string; value: number }[]> {
     const response = await this.request<any>('/reports/contacts-by-state')
 

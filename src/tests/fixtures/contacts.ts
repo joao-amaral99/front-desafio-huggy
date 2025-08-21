@@ -1,4 +1,3 @@
-// Dados mock reutilizáveis para testes
 export const mockContact = {
   id: 1,
   name: 'João Silva',
