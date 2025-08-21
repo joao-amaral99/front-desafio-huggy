@@ -1,0 +1,101 @@
+/* ===== DESIGN TOKENS ===== */
+:root {
+  /* ===== FONTES ===== */
+  --font-family-primary: 'Roboto', sans-serif;
+  --font-family-secondary: 'Arial', sans-serif;
+
+  /* ===== TAMANHOS DE FONTE ===== */
+  --font-size-xs: 0.75rem; /* 12px */
+  --font-size-sm: 0.875rem; /* 14px */
+  --font-size-base: 1rem; /* 16px */
+  --font-size-lg: 1.125rem; /* 18px */
+  --font-size-xl: 1.25rem; /* 20px */
+  --font-size-2xl: 1.5rem; /* 24px */
+  --font-size-3xl: 1.875rem; /* 30px */
+  --font-size-4xl: 2.25rem; /* 36px */
+
+  /* ===== PESOS DE FONTE ===== */
+  --font-weight-light: 300;
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-bold: 700;
+
+  /* ===== CORES PRIMÁRIAS ===== */
+  --color-primary: #321bde;
+  --color-primary-dark: #2818c4;
+  --color-primary-light: #4338ca;
+
+  /* ===== CORES DE TEXTO ===== */
+  --color-text-primary: #262626;
+  --color-text-secondary: #505050;
+  --color-text-tertiary: #757575;
+  --color-text-placeholder: #949494;
+
+  /* ===== CORES NEUTRAS ===== */
+  --color-white: #ffffff;
+  --color-black: #000000;
+  --color-gray-50: #f9fafb;
+  --color-gray-100: #f3f4f6;
+  --color-gray-200: #e5e7eb;
+  --color-gray-300: #d1d5db;
+  --color-gray-400: #9ca3af;
+  --color-gray-500: #6b7280;
+  --color-gray-600: #4b5563;
+  --color-gray-700: #374151;
+  --color-gray-800: #1f2937;
+  --color-gray-900: #111827;
+
+  /* ===== CORES SEMÂNTICAS ===== */
+  --color-success: #10b981;
+  --color-warning: #f59e0b;
+  --color-error: #ef4444;
+  --color-error-dark: #dc2626;
+  --color-error-light: #fecaca;
+  --color-info: #3b82f6;
+
+  /* ===== CORES DE BACKGROUND ===== */
+  --color-background-primary: #f8f8f8;
+  --color-background-secondary: #ffffff;
+  --color-background-hover: #f8f8f8;
+  --color-background-hover-light: #fef2f2;
+  --color-background-avatar: #f8f7fd;
+
+  /* ===== BORDAS ===== */
+  --color-border-primary: #e1e1e1;
+  --color-border-secondary: #d1d5db;
+  --color-border-focus: var(--color-primary);
+
+  /* ===== ESPAÇAMENTOS ===== */
+  --spacing-xs: 0.25rem; /* 4px */
+  --spacing-sm: 0.5rem; /* 8px */
+  --spacing-md: 1rem; /* 16px */
+  --spacing-lg: 1.5rem; /* 24px */
+  --spacing-xl: 2rem; /* 32px */
+  --spacing-2xl: 3rem; /* 48px */
+
+  /* ===== BORDER RADIUS ===== */
+  --border-radius-sm: 0.25rem; /* 4px */
+  --border-radius-md: 0.5rem; /* 8px */
+  --border-radius-lg: 0.75rem; /* 12px */
+
+  /* ===== SOMBRAS ===== */
+  --shadow-sm: 0px 1px 2px 0px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0px 1px 2px 0px rgba(0, 0, 0, 0.15);
+  --shadow-dialog: 0px 1px 2px 0px rgba(0, 0, 0, 0.15);
+
+  /* ===== TRANSIÇÕES ===== */
+  --transition-fast: 0.15s ease-in-out;
+  --transition-normal: 0.2s ease-in-out;
+  --transition-slow: 0.3s ease-in-out;
+
+  /* ===== Z-INDEX ===== */
+  --z-index-dropdown: 1000;
+  --z-index-modal: 1100;
+  --z-index-tooltip: 1200;
+
+  /* ===== DIMENSÕES ===== */
+  --width-sidebar: 250px;
+  --height-header: 64px;
+  --height-button: 36px;
+  --height-input: 36px;
+}
